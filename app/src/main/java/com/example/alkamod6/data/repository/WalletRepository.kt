@@ -1,6 +1,7 @@
 package com.example.alkamod6.data.repository
 
 import com.example.alkamod6.data.local.dao.WalletDao
+import com.example.alkamod6.data.local.entities.TransactionEntity
 import com.example.alkamod6.data.local.entities.UserEntity
 import com.example.alkamod6.data.model.*
 import com.example.alkamod6.data.remote.WalletApi
@@ -22,6 +23,8 @@ class WalletRepository(
     suspend fun saveUserProfile(user: UserEntity) = dao.saveUserProfile(user)
 
     // Transacciones
+    fun getAllTransactions(): Flow<List<TransactionEntity>> = dao.getAllTransactions()
+
     suspend fun fetchTransactions(token: String): Response<List<TransactionResponse>> {
         return api.getTransactions("Bearer $token")
     }
@@ -30,7 +33,7 @@ class WalletRepository(
         return api.createTransaction("Bearer $token", transaction)
     }
 
-    suspend fun insertTransactionLocal(transaction: com.example.alkamod6.data.local.entities.TransactionEntity) {
+    suspend fun insertTransactionLocal(transaction: TransactionEntity) {
         dao.insertTransaction(transaction)
     }
 }

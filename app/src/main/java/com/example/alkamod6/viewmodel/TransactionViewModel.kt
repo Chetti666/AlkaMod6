@@ -12,13 +12,14 @@ import kotlinx.coroutines.launch
 
 class TransactionViewModel(private val repository: WalletRepository) : ViewModel() {
 
-    // Observa el perfil del usuario desde Room (Req 4 y 5)
+    // Observa el perfil del usuario desde el repositorio (Req 4 y 5)
     val userProfile: StateFlow<UserEntity?> = repository.getUserProfile()
         .stateIn(viewModelScope, SharingStarted.Lazily, null)
 
     // Observa las transacciones locales (Req 2 y 4)
-    // En un caso real, aquí llamaríamos a fetchTransactions de la API primero
-    val transactions: StateFlow<List<TransactionEntity>> = repository.dao.getAllTransactions()
+    // Para este ejemplo, añadiremos un método en el repositorio para obtener el flujo
+    // Pero por ahora lo simularemos directamente si el repositorio lo permite o ajustamos el repo
+    val transactions: StateFlow<List<TransactionEntity>> = repository.getAllTransactions()
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     fun loadData(token: String) {
@@ -34,10 +35,11 @@ class TransactionViewModel(private val repository: WalletRepository) : ViewModel
                             type = it.type
                         )
                     }
-                    repository.dao.insertTransactions(remoteData)
+                    // Guardar localmente a través del repositorio
+                    remoteData.forEach { repository.insertTransactionLocal(it) }
                 }
             } catch (e: Exception) {
-                // Manejo de errores (Req: Manejo de errores adecuado)
+                // Manejo de errores
             }
         }
     }
