@@ -1,67 +1,59 @@
 package com.example.alkamod6.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.alkamod6.data.local.entities.UserEntity
 import com.example.alkamod6.data.model.LoginRequest
 import com.example.alkamod6.data.model.RegisterRequest
 import com.example.alkamod6.data.repository.WalletRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 sealed class AuthState {
     object Idle : AuthState()
     object Loading : AuthState()
-    data class Success(val token: String) : AuthState()
+    data class Success(val user: UserEntity) : AuthState()
     data class Error(val message: String) : AuthState()
 }
 
 class AuthViewModel(private val repository: WalletRepository) : ViewModel() {
 
-    private val _authState = MutableStateFlow<AuthState>(AuthState.Idle)
-    val authState: StateFlow<AuthState> = _authState
+    var authState by mutableStateOf<AuthState>(AuthState.Idle)
+        private set
 
     fun login(email: String, pass: String) {
         viewModelScope.launch {
-            _authState.value = AuthState.Loading
+            authState = AuthState.Loading
             try {
-                val response = repository.login(LoginRequest(email, pass))
-                if (response.isSuccessful && response.body() != null) {
-                    val loginResponse = response.body()!!
-                    // Guardar perfil localmente
-                    repository.saveUserProfile(
-                        UserEntity(
-                            id = loginResponse.user.id,
-                            name = loginResponse.user.name,
-                            email = loginResponse.user.email,
-                            avatarUrl = loginResponse.user.avatarUrl,
-                            balance = loginResponse.user.balance,
-                            token = loginResponse.token
-                        )
-                    )
-                    _authState.value = AuthState.Success(loginResponse.token)
+                // Para MockAPI simulamos el login buscando al usuario en la lista
+                val response = repository.loginMock(email, pass)
+                if (response != null) {
+                    repository.saveUserProfile(response)
+                    authState = AuthState.Success(response)
                 } else {
-                    _authState.value = AuthState.Error("Error en credenciales")
+                    authState = AuthState.Error("Credenciales inválidas o usuario no encontrado")
                 }
             } catch (e: Exception) {
-                _authState.value = AuthState.Error(e.message ?: "Error de red")
+                authState = AuthState.Error("Error de conexión: ${e.message}")
             }
         }
     }
 
     fun register(name: String, email: String, pass: String) {
         viewModelScope.launch {
-            _authState.value = AuthState.Loading
+            authState = AuthState.Loading
             try {
-                val response = repository.register(RegisterRequest(name, email, pass))
+                val request = RegisterRequest(name, email, pass)
+                val response = repository.register(request)
                 if (response.isSuccessful) {
-                    _authState.value = AuthState.Idle // O navegar al login
+                    authState = AuthState.Idle // Redirigir al login
                 } else {
-                    _authState.value = AuthState.Error("Error al registrar")
+                    authState = AuthState.Error("Error al registrar: ${response.code()}")
                 }
             } catch (e: Exception) {
-                _authState.value = AuthState.Error(e.message ?: "Error de red")
+                authState = AuthState.Error("Error de conexión: ${e.message}")
             }
         }
     }

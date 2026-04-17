@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
         ).build()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://tu-api-ejemplo.com/api/") // Cambiar por la URL real de la API
+            .baseUrl("https://69e29f813327837a15528719.mockapi.io/") // Cambiar por la URL real de la API
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -45,7 +45,8 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     WalletNavGraph(
                         navController = navController,
-                        authViewModel = authViewModel
+                        authViewModel = authViewModel,
+                        modifier = Modifier.padding(innerPadding)
                     )
                 }
             }

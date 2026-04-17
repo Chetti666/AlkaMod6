@@ -9,7 +9,7 @@ data class LoginRequest(
 
 data class LoginResponse(
     val token: String,
-    val user: UserDto
+    val user: UserResponse
 )
 
 data class RegisterRequest(
@@ -18,16 +18,17 @@ data class RegisterRequest(
     val password: String
 )
 
-data class UserDto(
-    val id: Int,
+data class UserResponse(
+    val id: String,
     val name: String,
     val email: String,
-    @SerializedName("avatar_url") val avatarUrl: String,
+    val password: String,
+    @SerializedName("avatarUrl") val avatarUrl: String,
     val balance: Double
 )
 
 data class TransactionResponse(
-    val id: Int,
+    val id: String,
     val amount: Double,
     val description: String,
     val date: String,

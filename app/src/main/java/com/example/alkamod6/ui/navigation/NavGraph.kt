@@ -1,6 +1,7 @@
 package com.example.alkamod6.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,11 +18,13 @@ sealed class Screen(val route: String) {
 @Composable
 fun WalletNavGraph(
     navController: NavHostController,
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    modifier: Modifier = Modifier
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Login.route
+        startDestination = Screen.Login.route,
+        modifier = modifier
     ) {
         composable(Screen.Login.route) {
             LoginScreen(

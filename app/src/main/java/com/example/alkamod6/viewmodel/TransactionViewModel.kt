@@ -22,10 +22,10 @@ class TransactionViewModel(private val repository: WalletRepository) : ViewModel
     val transactions: StateFlow<List<TransactionEntity>> = repository.getAllTransactions()
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
-    fun loadData(token: String) {
+    fun loadData() {
         viewModelScope.launch {
             try {
-                val response = repository.fetchTransactions(token)
+                val response = repository.fetchTransactions()
                 if (response.isSuccessful && response.body() != null) {
                     val remoteData = response.body()!!.map { 
                         TransactionEntity(
