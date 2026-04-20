@@ -14,9 +14,7 @@ class WalletRepository(
 ) {
     // Auth
     suspend fun login(request: LoginRequest): Response<LoginResponse> {
-        // En una implementación real se llamaría a api.login
-        // Pero para MockAPI simulamos el login buscando en la lista de usuarios
-        return Response.success(null) // Esto es solo un placeholder
+        return Response.success(null)
     }
 
     suspend fun loginMock(email: String, pass: String): UserEntity? {
@@ -25,11 +23,11 @@ class WalletRepository(
             val user = response.body()?.find { it.email == email && it.password == pass }
             return user?.let {
                 UserEntity(
-                    id = it.id.toIntOrNull() ?: 0,
-                    name = it.name,
-                    email = it.email,
-                    avatarUrl = it.avatarUrl,
-                    balance = it.balance,
+                    id = it.id?.toIntOrNull() ?: 0,
+                    name = it.name ?: "Usuario",
+                    email = it.email ?: "",
+                    avatarUrl = it.avatarUrl ?: "",
+                    balance = it.balance ?: 0.0,
                     token = "mock-token-${it.id}"
                 )
             }

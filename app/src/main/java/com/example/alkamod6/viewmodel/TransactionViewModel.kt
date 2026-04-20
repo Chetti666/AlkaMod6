@@ -29,10 +29,10 @@ class TransactionViewModel(private val repository: WalletRepository) : ViewModel
                 if (response.isSuccessful && response.body() != null) {
                     val remoteData = response.body()!!.map { 
                         TransactionEntity(
-                            amount = it.amount,
-                            description = it.description,
-                            date = it.date,
-                            type = it.type
+                            amount = it.amount ?: 0.0,
+                            description = it.description ?: "",
+                            date = it.date ?: "",
+                            type = it.type ?: "SEND"
                         )
                     }
                     // Guardar localmente a través del repositorio

@@ -8,8 +8,8 @@ data class LoginRequest(
 )
 
 data class LoginResponse(
-    val token: String,
-    val user: UserResponse
+    val token: String?,
+    val user: UserResponse?
 )
 
 data class RegisterRequest(
@@ -19,18 +19,18 @@ data class RegisterRequest(
 )
 
 data class UserResponse(
-    val id: String,
-    val name: String,
-    val email: String,
-    val password: String,
-    @SerializedName("avatarUrl") val avatarUrl: String,
-    val balance: Double
+    val id: String?,
+    val name: String?,
+    val email: String?,
+    val password: String?,
+    @SerializedName("avatarUrl") val avatarUrl: String?,
+    val balance: Double?
 )
 
 data class TransactionResponse(
-    val id: String,
-    val amount: Double,
-    val description: String,
-    val date: String,
-    val type: String
+    val id: String?,
+    val amount: Double?,
+    val description: String?,
+    val date: String?,
+    val type: String?
 )

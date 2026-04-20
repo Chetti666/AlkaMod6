@@ -16,6 +16,7 @@ import com.example.alkamod6.data.repository.WalletRepository
 import com.example.alkamod6.ui.navigation.WalletNavGraph
 import com.example.alkamod6.ui.theme.AlkaMod6Theme
 import com.example.alkamod6.viewmodel.AuthViewModel
+import com.example.alkamod6.viewmodel.TransactionViewModel
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -23,20 +24,21 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        // Inicialización básica (En un proyecto real usaríamos Hilt/Koin)
         val db = Room.databaseBuilder(
             applicationContext,
             AppDatabase::class.java, "wallet-db"
         ).build()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://69e29f813327837a15528719.mockapi.io/") // Cambiar por la URL real de la API
+            .baseUrl("https://69e29f813327837a15528719.mockapi.io/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
         val api = retrofit.create(WalletApi::class.java)
         val repository = WalletRepository(api, db.walletDao())
+        
         val authViewModel = AuthViewModel(repository)
+        val transactionViewModel = TransactionViewModel(repository)
 
         enableEdgeToEdge()
         setContent {
@@ -46,6 +48,7 @@ class MainActivity : ComponentActivity() {
                     WalletNavGraph(
                         navController = navController,
                         authViewModel = authViewModel,
+                        transactionViewModel = transactionViewModel,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
