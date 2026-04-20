@@ -35,7 +35,11 @@ fun DashboardScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             ProfileImage(
-                url = user?.avatarUrl ?: ""
+                url = if (user?.avatarUrl.isNullOrBlank()) {
+                    "https://i.pravatar.cc/150?u=${user?.email ?: "default"}"
+                } else {
+                    user?.avatarUrl!!
+                }
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column {
