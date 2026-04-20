@@ -14,7 +14,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
+import com.example.alkamod6.ui.components.ProfileImage
 import com.example.alkamod6.data.local.entities.TransactionEntity
 import com.example.alkamod6.data.local.entities.UserEntity
 
@@ -29,18 +29,13 @@ fun DashboardScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Cabecera: Perfil (Req 5 - Carga de imágenes con Coil)
+        // Cabecera: Perfil (Req 5 - Carga de imágenes con Picasso)
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            AsyncImage(
-                model = user?.avatarUrl ?: "https://via.placeholder.com/150",
-                contentDescription = "Avatar",
-                modifier = Modifier
-                    .size(60.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
+            ProfileImage(
+                url = user?.avatarUrl ?: ""
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column {

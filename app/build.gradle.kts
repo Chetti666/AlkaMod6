@@ -63,8 +63,11 @@ dependencies {
     // Navigation
     implementation(libs.androidx.navigation.compose)
 
-    // Coil
+    // Coil (Mantener opcional)
     implementation(libs.coil.compose)
+
+    // Picasso (Req 5)
+    implementation(libs.picasso)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
