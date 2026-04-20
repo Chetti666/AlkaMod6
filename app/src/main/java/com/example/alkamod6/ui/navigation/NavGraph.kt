@@ -70,9 +70,9 @@ fun WalletNavGraph(
         composable(Screen.SendMoney.route) {
             SendMoneyScreen(
                 onSendClick = { amount, desc ->
-                    // Lógica para enviar dinero (ViewModel)
-                    // Por ahora solo volvemos atrás
-                    navController.popBackStack()
+                    transactionViewModel.performTransaction(amount, desc) {
+                        navController.popBackStack()
+                    }
                 },
                 onBackClick = { navController.popBackStack() }
             )

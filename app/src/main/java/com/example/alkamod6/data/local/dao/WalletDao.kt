@@ -26,4 +26,10 @@ interface WalletDao {
 
     @Query("DELETE FROM user_profile")
     suspend fun clearUserProfile()
+
+    @Query("UPDATE user_profile SET balance = balance - :amount")
+    suspend fun subtractBalance(amount: Double)
+
+    @Query("UPDATE user_profile SET balance = balance + :amount")
+    suspend fun addBalance(amount: Double)
 }

@@ -43,4 +43,32 @@ class TransactionViewModel(private val repository: WalletRepository) : ViewModel
             }
         }
     }
+
+    fun performTransaction(amount: Double, description: String, onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            try {
+                val newTransaction = com.example.alkamod6.data.model.TransactionResponse(
+                    id = null,
+                    amount = amount,
+                    description = description,
+                    date = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(java.util.Date()),
+                    type = "SEND"
+                )
+                
+                val response = repository.createTransaction(newTransaction)
+                if (response.isSuccessful) {
+                    // Actualizar localmente para soporte offline
+                    repository.insertTransactionLocal(TransactionEntity(
+                        amount = amount,
+                        description = description,
+                        date = newTransaction.date ?: "",
+                        type = "SEND"
+                    ))
+                    onSuccess()
+                }
+            } catch (e: Exception) {
+                // Manejo de errores
+            }
+        }
+    }
 }

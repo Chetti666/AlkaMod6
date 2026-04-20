@@ -55,5 +55,11 @@ class WalletRepository(
 
     suspend fun insertTransactionLocal(transaction: TransactionEntity) {
         dao.insertTransaction(transaction)
+        // Actualizar el saldo según el tipo de transacción
+        if (transaction.type == "SEND") {
+            dao.subtractBalance(transaction.amount)
+        } else {
+            dao.addBalance(transaction.amount)
+        }
     }
 }
